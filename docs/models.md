@@ -20,7 +20,7 @@ Course
     - slug
     - title
     - description
-    - allowed memberships       (foreignkey to Membership)
+    - allowed memberships       (ManytoManyField to Membership)
 
 Lesson
     - slug
