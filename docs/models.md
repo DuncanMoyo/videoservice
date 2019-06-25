@@ -12,8 +12,8 @@ UserMembership
     - membership type           (foreignkey to Membership)
     
 Subscription
-    - user membership
-    - stripe subscription id    (foreignkey to User membership)
+    - user membership           (foreignkey to User membership)
+    - stripe subscription id    
     - active
 
 Course
