@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
+from datetime import datetime
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -50,7 +51,6 @@ def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
 post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 
-
 class Subscription(models.Model):
     user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
     stripe_subscription_id = models.CharField(max_length=40)
@@ -58,6 +58,16 @@ class Subscription(models.Model):
 
     def __str__(self):
         return self.user_membership.user.username
+
+    @property
+    def get_created_date(self):
+        subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+        return datetime.fromtimestamp(subscription.created)
+
+    @property
+    def get_next_billing_date(self):
+        subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+        return datetime.fromtimestamp(subscription.current_period_end)
 
 
 
